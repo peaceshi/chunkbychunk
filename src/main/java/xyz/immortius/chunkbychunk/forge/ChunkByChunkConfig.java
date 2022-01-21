@@ -41,8 +41,8 @@ public class ChunkByChunkConfig {
         sealWorld = builder.comment("Should empty chunks be generated as a bedrock outline").define("seal_world", exampleConfig.getGeneration().sealWorld());
         spawnNewChunkChest = builder.comment("Should chunks include a chest with items to enable obtaining more chunks?").define("spawn_new_chunk_chest", exampleConfig.getGeneration().spawnNewChunkChest());
         useBedrockChest = builder.comment("Should the chest be a bedrock chest rather than a standard chest?").define("use_bedrock_chest", exampleConfig.getGeneration().useBedrockChest());
-        minNewChunkChestSpawnDepth = builder.comment("The minimum depth at which the bedrock chest can spawn").defineInRange("min_new_chunk_chest_spawn_depth", exampleConfig.getGeneration().getMinChestSpawnDepth(), -64, 128);
-        maxNewChunkChestSpawnDepth = builder.comment("The maximum depth at which the bedrock chest can spawn").defineInRange("max_new_chunk_chest_spawn_depth", exampleConfig.getGeneration().getMaxChestSpawnDepth(), -64, 128);
+        minNewChunkChestSpawnDepth = builder.comment("The minimum depth at which the bedrock chest can spawn").defineInRange("min_new_chunk_chest_spawn_depth", exampleConfig.getGeneration().getMinChestSpawnDepth(), 0, 128);
+        maxNewChunkChestSpawnDepth = builder.comment("The maximum depth at which the bedrock chest can spawn").defineInRange("max_new_chunk_chest_spawn_depth", exampleConfig.getGeneration().getMaxChestSpawnDepth(), 0, 128);
         chestQuantity = builder.comment("The number of items the bedrock chest provides").defineInRange("chest_quantity", exampleConfig.getGeneration().getChestQuantity(), 1, 64);
         chestContents = builder.comment("The type of items the bedrock chest provides").defineEnum("chest_contents", exampleConfig.getGeneration().getChestContents());
         initialChunks= builder.comment("The number of chunks to spawn initially (up to 9).").defineInRange("initial_chunks", exampleConfig.getGeneration().getInitialChunks(), 1, 9);

@@ -11,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import xyz.immortius.chunkbychunk.interop.SidedBlockEntityInteropBase;
 
 import java.util.Map;
@@ -90,11 +89,12 @@ public abstract class BaseFueledBlockEntity extends SidedBlockEntityInteropBase 
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("ChargedFuel", this.chargedFuel);
-        tag.putInt("RemainingFuel", this.remainingFuel);
-        ContainerHelper.saveAllItems(tag, this.items);
+    public CompoundTag save(CompoundTag tag) {
+        CompoundTag result = super.save(tag);
+        result.putInt("ChargedFuel", this.chargedFuel);
+        result.putInt("RemainingFuel", this.remainingFuel);
+        ContainerHelper.saveAllItems(result, this.items);
+        return result;
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class BaseFueledBlockEntity extends SidedBlockEntityInteropBase 
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int slot, ItemStack itemStack, Direction direction) {
         return canPlaceItem(slot, itemStack);
     }
 

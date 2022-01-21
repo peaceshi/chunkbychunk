@@ -26,6 +26,7 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import xyz.immortius.chunkbychunk.common.menus.WorldScannerMenu;
 import xyz.immortius.chunkbychunk.common.util.ChunkUtil;
+import xyz.immortius.chunkbychunk.common.util.ColorUtil;
 import xyz.immortius.chunkbychunk.common.util.SpiralIterator;
 import xyz.immortius.chunkbychunk.common.world.SkyChunkGenerator;
 import xyz.immortius.chunkbychunk.interop.CBCInteropMethods;
@@ -66,19 +67,19 @@ public class WorldScannerBlockEntity extends BaseFueledBlockEntity {
     private static final int[] SLOTS_FOR_DOWN = new int[]{SLOT_FUEL};
 
     private static final byte[] SCAN_COLOR_PALETTE = {
-            MaterialColor.COLOR_BLACK.getPackedId(MaterialColor.Brightness.NORMAL),
-            MaterialColor.NETHER.getPackedId(MaterialColor.Brightness.LOWEST),
-            MaterialColor.NETHER.getPackedId(MaterialColor.Brightness.LOW),
-            MaterialColor.NETHER.getPackedId(MaterialColor.Brightness.NORMAL),
-            MaterialColor.NETHER.getPackedId(MaterialColor.Brightness.HIGH),
-            MaterialColor.COLOR_RED.getPackedId(MaterialColor.Brightness.LOWEST),
-            MaterialColor.COLOR_RED.getPackedId(MaterialColor.Brightness.LOW),
-            MaterialColor.COLOR_RED.getPackedId(MaterialColor.Brightness.NORMAL),
-            MaterialColor.COLOR_RED.getPackedId(MaterialColor.Brightness.HIGH),
-            MaterialColor.TERRACOTTA_YELLOW.getPackedId(MaterialColor.Brightness.HIGH),
-            MaterialColor.COLOR_YELLOW.getPackedId(MaterialColor.Brightness.HIGH),
-            MaterialColor.GOLD.getPackedId(MaterialColor.Brightness.HIGH),
-            MaterialColor.SNOW.getPackedId(MaterialColor.Brightness.HIGH)
+            ColorUtil.encode(MaterialColor.COLOR_BLACK, ColorUtil.NORMAL),
+            ColorUtil.encode(MaterialColor.NETHER, ColorUtil.LOWEST),
+            ColorUtil.encode(MaterialColor.NETHER, ColorUtil.LOW),
+            ColorUtil.encode(MaterialColor.NETHER, ColorUtil.NORMAL),
+            ColorUtil.encode(MaterialColor.NETHER, ColorUtil.HIGH),
+            ColorUtil.encode(MaterialColor.COLOR_RED, ColorUtil.LOWEST),
+            ColorUtil.encode(MaterialColor.COLOR_RED, ColorUtil.LOW),
+            ColorUtil.encode(MaterialColor.COLOR_RED, ColorUtil.NORMAL),
+            ColorUtil.encode(MaterialColor.COLOR_RED, ColorUtil.HIGH),
+            ColorUtil.encode(MaterialColor.TERRACOTTA_YELLOW, ColorUtil.HIGH),
+            ColorUtil.encode(MaterialColor.COLOR_YELLOW, ColorUtil.HIGH),
+            ColorUtil.encode(MaterialColor.GOLD, ColorUtil.HIGH),
+            ColorUtil.encode(MaterialColor.SNOW, ColorUtil.HIGH)
     };
 
     private static final Multimap<Item, Block> SCAN_ITEM_MAPPINGS = ImmutableMultimap.<Item, Block>builder()
@@ -157,11 +158,12 @@ public class WorldScannerBlockEntity extends BaseFueledBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("Map", map);
-        tag.put("ScanIterator", scanIterator.createTag());
-        tag.putInt("ScanCharge", scanCharge);
+    public CompoundTag save(CompoundTag tag) {
+        CompoundTag result = super.save(tag);
+        result.putInt("Map", map);
+        result.put("ScanIterator", scanIterator.createTag());
+        result.putInt("ScanCharge", scanCharge);
+        return result;
     }
 
     private boolean validTarget() {
@@ -220,7 +222,7 @@ public class WorldScannerBlockEntity extends BaseFueledBlockEntity {
                 int blockCount = ChunkUtil.countBlocks(chunk, scanForBlocks);
 
                 // Set the color based on the count
-                byte color = MaterialColor.COLOR_BLACK.getPackedId(MaterialColor.Brightness.NORMAL);
+                byte color = ColorUtil.encode(MaterialColor.COLOR_BLACK, ColorUtil.NORMAL);
                 for (int i = 0; i < SCAN_COLOR_THRESHOLD.length; i++) {
                     color = SCAN_COLOR_PALETTE[i];
                     if (blockCount <= SCAN_COLOR_THRESHOLD[i]) {
@@ -310,7 +312,7 @@ public class WorldScannerBlockEntity extends BaseFueledBlockEntity {
             MapItemSavedData data = getLevel().getMapData(MapItem.makeKey(map));
             for (int x = 0; x < MapItem.IMAGE_WIDTH; x++) {
                 for (int y = 0; y < MapItem.IMAGE_HEIGHT; y++) {
-                    data.setColor(x, y, MaterialColor.NONE.getPackedId(MaterialColor.Brightness.NORMAL));
+                    data.setColor(x, y, ColorUtil.encode(MaterialColor.NONE, ColorUtil.NORMAL));
                 }
             }
         }

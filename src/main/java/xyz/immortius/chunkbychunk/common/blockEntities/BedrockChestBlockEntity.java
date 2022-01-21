@@ -55,20 +55,29 @@ public class BedrockChestBlockEntity extends RandomizableContainerBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.items);
-        }
+    public void load(CompoundTag p_155678_) {
+        super.load(p_155678_);
+        this.loadFromTag(p_155678_);
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public CompoundTag save(CompoundTag p_59676_) {
+        super.save(p_59676_);
+        return this.saveToTag(p_59676_);
+    }
+
+    public void loadFromTag(CompoundTag tag) {
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(tag)) {
+        if (!this.tryLoadLootTable(tag) && tag.contains("Items", 9)) {
             ContainerHelper.loadAllItems(tag, this.items);
         }
-
     }
+
+    public CompoundTag saveToTag(CompoundTag tag) {
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.items, false);
+        }
+        return tag;
+    }
+    
 }
