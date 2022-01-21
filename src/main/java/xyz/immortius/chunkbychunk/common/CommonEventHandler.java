@@ -26,7 +26,7 @@ public final class CommonEventHandler {
      */
     public static boolean isBlockPlacementAllowed(BlockPos pos, Entity playerEntity, LevelAccessor level) {
         return ChunkByChunkConfig.get().getGameplayConfig().isBlockPlacementAllowedOutsideSpawnedChunks() ||
-                !playerEntity.getLevel().dimension().equals(Level.OVERWORLD) ||
+                !playerEntity.level.dimension().equals(Level.OVERWORLD) ||
                 !SpawnChunkHelper.isEmptyChunk(level, new ChunkPos(pos));
     }
 }

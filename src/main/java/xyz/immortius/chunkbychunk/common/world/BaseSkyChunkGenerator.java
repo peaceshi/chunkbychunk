@@ -10,12 +10,10 @@ import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
@@ -60,33 +58,77 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public Climate.Sampler climateSampler() {
-        return parent.climateSampler();
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor p_156171_, StructureFeatureManager p_156172_, ChunkAccess chunkAccess) {
+        return CompletableFuture.completedFuture(chunkAccess);
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion region, long seed, BiomeManager biomeManager, StructureFeatureManager structureManager, ChunkAccess chunk, GenerationStep.Carving step) {
-
+    public void createBiomes(Registry<Biome> biomeRegistry, ChunkAccess chunkAccess) {
+        parent.createBiomes(biomeRegistry, chunkAccess);
     }
 
     @Override
-    public void buildSurface(WorldGenRegion region, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
+    public void applyCarvers(long p_62157_, BiomeManager p_62158_, ChunkAccess p_62159_, GenerationStep.Carving p_62160_) {
+    }
 
+    @Override
+    protected Aquifer createAquifer(ChunkAccess p_156162_) {
+        return Aquifer.createDisabled(this.getSeaLevel(), Blocks.WATER.defaultBlockState());
+    }
+
+    @Override
+    public BlockPos findNearestMapFeature(ServerLevel level, StructureFeature<?> feature, BlockPos pos, int p_62165_, boolean p_62166_) {
+        return parent.findNearestMapFeature(level, feature, pos, p_62165_, p_62166_);
+    }
+
+    @Override
+    public void applyBiomeDecoration(WorldGenRegion p_62168_, StructureFeatureManager p_62169_) {
+    }
+
+    @Override
+    public void buildSurfaceAndBedrock(WorldGenRegion p_62170_, ChunkAccess p_62171_) {
     }
 
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
+    }
 
+    @Override
+    public StructureSettings getSettings() {
+        return parent.getSettings();
+    }
+
+    @Override
+    public int getSpawnHeight(LevelHeightAccessor heightAccessor) {
+        return parent.getSpawnHeight(heightAccessor);
+    }
+
+    @Override
+    public BiomeSource getBiomeSource() {
+        return parent.getBiomeSource();
+    }
+
+    @Override
+    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome biome, StructureFeatureManager structureFeatureManager, MobCategory mobCategory, BlockPos pos) {
+        return parent.getMobsAt(biome, structureFeatureManager, mobCategory, pos);
+    }
+
+    @Override
+    public void createStructures(RegistryAccess registryAccess, StructureFeatureManager structureFeatureManager, ChunkAccess chunk, StructureManager structureManager, long seed) {
+    }
+
+    @Override
+    public void createReferences(WorldGenLevel level, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
+    }
+
+    @Override
+    public int getFirstFreeHeight(int p_156175_, int p_156176_, Heightmap.Types p_156177_, LevelHeightAccessor p_156178_) {
+        return parent.getFirstFreeHeight(p_156175_, p_156176_, p_156177_, p_156178_);
     }
 
     @Override
     public int getGenDepth() {
         return parent.getGenDepth();
-    }
-
-    @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
@@ -110,62 +152,7 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> createBiomes(Registry<Biome> biomes, Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-        return parent.createBiomes(biomes, executor, blender, structureFeatureManager, chunk);
-    }
-
-    @Override
-    public Biome getNoiseBiome(int x, int y, int z) {
-        return parent.getNoiseBiome(x, y, z);
-    }
-
-    @Override
-    public BlockPos findNearestMapFeature(ServerLevel level, StructureFeature<?> feature, BlockPos pos, int p_62165_, boolean p_62166_) {
-        return parent.findNearestMapFeature(level, feature, pos, p_62165_, p_62166_);
-    }
-
-    @Override
-    public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureFeatureManager structureFeatureManager) {
-
-    }
-
-    @Override
-    public int getSpawnHeight(LevelHeightAccessor heightAccessor) {
-        return parent.getSpawnHeight(heightAccessor);
-    }
-
-    @Override
-    public BiomeSource getBiomeSource() {
-        return parent.getBiomeSource();
-    }
-
-    @Override
-    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome biome, StructureFeatureManager structureFeatureManager, MobCategory mobCategory, BlockPos pos) {
-        return parent.getMobsAt(biome, structureFeatureManager, mobCategory, pos);
-    }
-
-    @Override
-    public void createStructures(RegistryAccess registryAccess, StructureFeatureManager structureFeatureManager, ChunkAccess chunk, StructureManager structureManager, long seed) {
-
-    }
-
-    @Override
-    public void createReferences(WorldGenLevel level, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-
-    }
-
-    @Override
-    public int getFirstFreeHeight(int x, int z, Heightmap.Types heightMapType, LevelHeightAccessor heightAccessor) {
-        return parent.getFirstFreeHeight(x, z, heightMapType, heightAccessor);
-    }
-
-    @Override
-    public int getFirstOccupiedHeight(int x, int z, Heightmap.Types heightMapType, LevelHeightAccessor heightAccessor) {
-        return parent.getFirstOccupiedHeight(x, z, heightMapType, heightAccessor);
-    }
-
-    @Override
-    public boolean hasStronghold(ChunkPos chunkPos) {
-        return parent.hasStronghold(chunkPos);
+    public BaseStoneSource getBaseStoneSource() {
+        return parent.getBaseStoneSource();
     }
 }

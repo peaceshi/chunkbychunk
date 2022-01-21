@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.blending.Blender;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
 
 import java.util.concurrent.CompletableFuture;
@@ -52,17 +51,17 @@ public class NetherChunkByChunkGenerator extends BaseSkyChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-        return super.fillFromNoise(executor, blender, structureFeatureManager, chunk).whenCompleteAsync((chunkAccess, throwable) -> {
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, StructureFeatureManager structureFeatureManager, ChunkAccess chunkAccess) {
+        return super.fillFromNoise(executor, structureFeatureManager, chunkAccess).whenCompleteAsync((chunk, throwable) -> {
             BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(0, 0, 0);
             for (blockPos.setZ(0); blockPos.getZ() < 16; blockPos.setZ(blockPos.getZ() + 1)) {
                 for (blockPos.setX(0); blockPos.getX() < 16; blockPos.setX(blockPos.getX() + 1)) {
-                    blockPos.setY(chunkAccess.getMinBuildHeight());
-                    chunkAccess.setBlockState(blockPos, Blocks.LAVA.defaultBlockState(), false);
-                    blockPos.setY(chunkAccess.getMinBuildHeight() + 1);
-                    chunkAccess.setBlockState(blockPos, Blocks.LAVA.defaultBlockState(), false);
+                    blockPos.setY(chunk.getMinBuildHeight());
+                    chunk.setBlockState(blockPos, Blocks.LAVA.defaultBlockState(), false);
+                    blockPos.setY(chunk.getMinBuildHeight() + 1);
+                    chunk.setBlockState(blockPos, Blocks.LAVA.defaultBlockState(), false);
                     blockPos.setY(127);
-                    chunkAccess.setBlockState(blockPos, Blocks.BEDROCK.defaultBlockState(), false);
+                    chunk.setBlockState(blockPos, Blocks.BEDROCK.defaultBlockState(), false);
                 }
             }
         });

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.blending.Blender;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
 
 import java.util.concurrent.CompletableFuture;
@@ -31,7 +30,7 @@ public class SkyChunkGenerator extends BaseSkyChunkGenerator {
     private final boolean generateSealedWorld;
 
     /**
-     * @param parent The chunkGenerator this generator is based on
+     * @param parent              The chunkGenerator this generator is based on
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld) {
@@ -40,9 +39,9 @@ public class SkyChunkGenerator extends BaseSkyChunkGenerator {
     }
 
     /**
-     * @param parent The chunkGenerator this generator is based on
+     * @param parent              The chunkGenerator this generator is based on
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
-     * @param structureSettings Structure settings to use, if not from the parent generator
+     * @param structureSettings   Structure settings to use, if not from the parent generator
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld, StructureSettings structureSettings) {
         super(parent, ChunkByChunkConstants.SKY_CHUNK_GENERATION_LEVEL, structureSettings);
@@ -60,10 +59,10 @@ public class SkyChunkGenerator extends BaseSkyChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
         if (generateSealedWorld) {
-            return parent.fillFromNoise(executor, blender, structureFeatureManager, chunk).whenCompleteAsync((chunkAccess, throwable) -> {
-                BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(0,0,0);
+            return parent.fillFromNoise(executor, structureFeatureManager, chunk).whenCompleteAsync((chunkAccess, throwable) -> {
+                BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(0, 0, 0);
                 for (blockPos.setZ(0); blockPos.getZ() < 16; blockPos.setZ(blockPos.getZ() + 1)) {
                     for (blockPos.setX(0); blockPos.getX() < 16; blockPos.setX(blockPos.getX() + 1)) {
                         blockPos.setY(chunkAccess.getMaxBuildHeight() - 1);
@@ -79,8 +78,7 @@ public class SkyChunkGenerator extends BaseSkyChunkGenerator {
                 }
             });
         } else {
-            return super.fillFromNoise(executor, blender, structureFeatureManager, chunk);
+            return super.fillFromNoise(executor, structureFeatureManager, chunk);
         }
     }
-
 }

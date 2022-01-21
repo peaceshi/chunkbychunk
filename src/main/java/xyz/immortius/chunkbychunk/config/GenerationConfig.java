@@ -39,13 +39,13 @@ public class GenerationConfig {
 
     @Name("min_chest_spawn_depth")
     @Comment("The minimum depth at which the chunk spawner chest can spawn")
-    @IntRange(min = -64, max = 128)
-    private int minChestSpawnDepth = -60;
+    @IntRange(min = 0, max = 128)
+    private int minChestSpawnDepth = 4;
 
     @Name("max_chest_spawn_depth")
     @Comment("The maximum depth at which the chunk spawner chest can spawn")
-    @IntRange(min = -64, max = 128)
-    private int maxChestSpawnDepth = -60;
+    @IntRange(min = 0, max = 128)
+    private int maxChestSpawnDepth = 4;
 
     @Name("initial_chunks")
     @Comment("The number of chunks to spawn initially (up to 9).")
