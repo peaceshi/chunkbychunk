@@ -7,7 +7,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import xyz.immortius.chunkbychunk.common.blockEntities.TriggeredSpawnRandomChunkBlockEntity;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
 
@@ -25,10 +24,9 @@ public class TriggeredSpawnRandomChunkBlock extends AbstractTriggeredSpawnChunkB
 
     public static ChunkPos getSourceChunk(BlockPos targetBlockPos) {
         Random random = new Random(targetBlockPos.asLong());
-        return new ChunkPos(random.nextInt(Short.MIN_VALUE, Short.MAX_VALUE), random.nextInt(Short.MIN_VALUE, Short.MAX_VALUE));
+        return new ChunkPos(random.nextInt(Short.MAX_VALUE * 2) + Short.MIN_VALUE, random.nextInt(Short.MAX_VALUE * 2) + Short.MIN_VALUE);
     }
 
-    @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new TriggeredSpawnRandomChunkBlockEntity(pos, state);

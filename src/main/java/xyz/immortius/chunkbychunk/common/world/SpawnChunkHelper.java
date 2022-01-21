@@ -1,6 +1,7 @@
 package xyz.immortius.chunkbychunk.common.world;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
@@ -136,7 +137,8 @@ public final class SpawnChunkHelper {
                         BlockEntity fromBlockEntity = from.getBlockEntity(sourceBlock);
                         BlockEntity toBlockEntity = to.getBlockEntity(targetBlock);
                         if (fromBlockEntity != null && toBlockEntity != null) {
-                            toBlockEntity.load(fromBlockEntity.saveWithFullMetadata());
+                            CompoundTag tag = new CompoundTag();
+                            toBlockEntity.load(fromBlockEntity.save(tag));
                         }
                     }
                 }
@@ -180,7 +182,7 @@ public final class SpawnChunkHelper {
         if (minPos == maxPos) {
             yPos = minPos;
         } else {
-            yPos = random.nextInt(minPos, maxPos + 1);
+            yPos = random.nextInt(maxPos - minPos + 1) + minPos;
         }
 
         BlockPos blockPos = new BlockPos(chunkPos.getMiddleBlockX(), yPos, chunkPos.getMiddleBlockZ());
