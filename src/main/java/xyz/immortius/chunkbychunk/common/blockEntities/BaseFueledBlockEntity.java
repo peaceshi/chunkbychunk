@@ -89,11 +89,12 @@ public abstract class BaseFueledBlockEntity extends SidedBlockEntityInteropBase 
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("ChargedFuel", this.chargedFuel);
-        tag.putInt("RemainingFuel", this.remainingFuel);
-        ContainerHelper.saveAllItems(tag, this.items);
+    public CompoundTag save(CompoundTag tag) {
+        CompoundTag result = super.save(tag);
+        result.putInt("ChargedFuel", this.chargedFuel);
+        result.putInt("RemainingFuel", this.remainingFuel);
+        ContainerHelper.saveAllItems(result, this.items);
+        return result;
     }
 
     /**
