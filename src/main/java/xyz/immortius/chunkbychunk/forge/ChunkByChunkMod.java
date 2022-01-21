@@ -3,7 +3,6 @@ package xyz.immortius.chunkbychunk.forge;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -15,27 +14,24 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.world.ForgeWorldPreset;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.*;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.RegistryObject;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
+import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import xyz.immortius.chunkbychunk.client.screens.BedrockChestScreen;
-import xyz.immortius.chunkbychunk.client.screens.ChunkByChunkConfigScreen;
 import xyz.immortius.chunkbychunk.client.screens.WorldForgeScreen;
 import xyz.immortius.chunkbychunk.client.screens.WorldScannerScreen;
 import xyz.immortius.chunkbychunk.common.CommonEventHandler;
@@ -54,9 +50,6 @@ import xyz.immortius.chunkbychunk.server.ServerEventHandler;
 
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * The Mod itself. Registers all registerable objects and sets up any event hooks
@@ -145,12 +138,12 @@ public class ChunkByChunkMod {
     }
 
     @SubscribeEvent
-    public void onServerStarted(ServerStartedEvent event) {
+    public void onServerStarted(FMLServerStartedEvent event) {
         ServerEventHandler.onServerStarted(event.getServer());
     }
 
     @SubscribeEvent
-    public void onServerStarting(ServerAboutToStartEvent event) {
+    public void onServerStarting(FMLServerAboutToStartEvent event) {
         ServerEventHandler.onServerStarting(event.getServer());
     }
 
