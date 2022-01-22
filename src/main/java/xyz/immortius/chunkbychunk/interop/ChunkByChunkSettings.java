@@ -1,82 +1,82 @@
 package xyz.immortius.chunkbychunk.interop;
 
 import xyz.immortius.chunkbychunk.config.ChunkRewardChestContent;
-import xyz.immortius.chunkbychunk.forge.ChunkByChunkConfig;
+import xyz.immortius.chunkbychunk.config.ChunkByChunkConfig;
 
 /**
  * Access to ChunkByChunk settings
  */
 public class ChunkByChunkSettings {
 
-    public static boolean sealWorld() { return ChunkByChunkConfig.sealWorld.get(); }
+    public static boolean sealWorld() { return ChunkByChunkConfig.get().getGeneration().sealWorld(); }
 
     public static boolean spawnNewChunkChest() {
-        return ChunkByChunkConfig.spawnNewChunkChest.get();
+        return ChunkByChunkConfig.get().getGeneration().spawnNewChunkChest();
     }
 
-    public static boolean useBedrockChest() { return ChunkByChunkConfig.useBedrockChest.get(); }
+    public static boolean useBedrockChest() { return ChunkByChunkConfig.get().getGeneration().useBedrockChest(); }
 
     public static int minChestSpawnDepth() {
-        return ChunkByChunkConfig.minChestSpawnDepth();
+        return ChunkByChunkConfig.get().getGeneration().getMinChestSpawnDepth();
     }
 
     public static int maxChestSpawnDepth() {
-        return ChunkByChunkConfig.maxChestSpawnDepth();
+        return ChunkByChunkConfig.get().getGeneration().getMaxChestSpawnDepth();
     }
 
     public static int initialChunks() {
-        return ChunkByChunkConfig.initialChunks.get();
+        return ChunkByChunkConfig.get().getGeneration().getInitialChunks();
     }
 
     public static int chestQuantity() {
-        return ChunkByChunkConfig.chestQuantity.get();
+        return ChunkByChunkConfig.get().getGeneration().getChestQuantity();
     }
 
     public static ChunkRewardChestContent chestContents() {
-        return ChunkByChunkConfig.chestContents.get();
+        return ChunkByChunkConfig.get().getGeneration().getChestContents();
     }
 
     public static int bedrockChestBlocksRemainingThreshold() {
-        return ChunkByChunkConfig.bedrockChestBlocksRemainingThreshold.get();
+        return ChunkByChunkConfig.get().getBedrockChest().getBedrockChestBlocksRemainingThreshold();
     }
 
     public static int chunkGenXOffset() {
-        return ChunkByChunkConfig.chunkGenXOffset.get();
+        return ChunkByChunkConfig.get().getGeneration().getChunkGenXOffset();
     }
 
     public static int chunkGenZOffset() {
-        return ChunkByChunkConfig.chunkGenZOffset.get();
+        return ChunkByChunkConfig.get().getGeneration().getChunkGenZOffset();
     }
 
     public static int worldForgeProductionRate() {
-        return ChunkByChunkConfig.worldForgeProductionRate.get();
+        return ChunkByChunkConfig.get().getWorldForge().getProductionRate();
     }
 
     public static int worldForgeSoilFuelValue() {
-        return ChunkByChunkConfig.worldForgeSoilFuelValue.get();
+        return ChunkByChunkConfig.get().getWorldForge().getSoilFuelValue();
     }
 
     public static int worldForgeStoneFuelValue() {
-        return ChunkByChunkConfig.worldForgeStoneFuelValue.get();
+        return ChunkByChunkConfig.get().getWorldForge().getStoneFuelValue();
     }
 
     public static int worldForgeFuelPerFragment() {
-        return ChunkByChunkConfig.worldForgeFuelPerFragment.get();
+        return ChunkByChunkConfig.get().getWorldForge().getFragmentFuelCost();
     }
 
     public static boolean isBlockPlacementAllowedOutsideSpawnedChunks() {
-        return ChunkByChunkConfig.blockPlacementAllowedOutsideSpawnedChunks.get();
+        return ChunkByChunkConfig.get().getGameplayConfig().isBlockPlacementAllowedOutsideSpawnedChunks();
     }
 
     public static int worldScannerFuelPerFragment() {
-        return ChunkByChunkConfig.worldScannerFuelPerFragment.get();
+        return ChunkByChunkConfig.get().getWorldScannerConfig().getFuelPerFragment();
     }
 
     public static int worldScannerFuelConsumedPerTick() {
-        return ChunkByChunkConfig.worldScannerFuelConsumedPerTick.get();
+        return ChunkByChunkConfig.get().getWorldScannerConfig().getFuelConsumedPerTick();
     }
 
     public static int worldScannerFuelRequiredPerChunk() {
-        return ChunkByChunkConfig.worldScannerFuelRequiredPerChunk.get();
+        return ChunkByChunkConfig.get().getWorldScannerConfig().getFuelRequiredPerChunk();
     }
 }

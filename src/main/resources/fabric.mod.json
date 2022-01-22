@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "chunkbychunk",
+  "version": "${version}",
+
+  "name": "Chunk By Chunk",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Immortius"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "MIT License",
+  "icon": "assets/chunkbychunk/logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "xyz.immortius.chunkbychunk.fabric.ChunkByChunkMod"
+    ],
+    "client": [
+      "xyz.immortius.chunkbychunk.fabric.ChunkByChunkClientMod"
+    ]
+  },
+  "mixins": [
+    "chunkbychunk.mixins.json"
+  ],
+  "accessWidener" : "chunkbychunk.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  }
+}
