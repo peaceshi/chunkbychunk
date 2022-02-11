@@ -11,15 +11,15 @@ import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeManager;
+import net.minecraft.world.level.biome.BiomeSource;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.StructureSettings;
-import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 
@@ -42,7 +42,7 @@ public class SkyChunkGenerator extends ChunkGenerator {
     private final boolean generateSealedWorld;
 
     /**
-     * @param parent The chunkGenerator this generator is based on
+     * @param parent              The chunkGenerator this generator is based on
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld) {
@@ -65,24 +65,46 @@ public class SkyChunkGenerator extends ChunkGenerator {
         return new SkyChunkGenerator(parent.withSeed(seed), generateSealedWorld);
     }
 
-    @Override
-    public Climate.Sampler climateSampler() {
-        return parent.climateSampler();
+    public void createBiomes(Registry<Biome> p_62197_, ChunkAccess p_62198_) {
+        parent.createBiomes(p_62197_, p_62198_);
+    }
+
+    public void applyCarvers(long p_62157_, BiomeManager p_62158_, ChunkAccess p_62159_, GenerationStep.Carving p_62160_) {
+    }
+
+    protected Aquifer createAquifer(ChunkAccess p_156162_) {
+        return Aquifer.createDisabled(this.getSeaLevel(), Blocks.WATER.defaultBlockState());
+    }
+
+    public BlockPos findNearestMapFeature(ServerLevel p_62162_, StructureFeature<?> p_62163_, BlockPos p_62164_, int p_62165_, boolean p_62166_) {
+        return parent.findNearestMapFeature(p_62162_, p_62163_, p_62164_, p_62165_, p_62166_);
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion region, long seed, BiomeManager biomeManager, StructureFeatureManager structureManager, ChunkAccess chunk, GenerationStep.Carving step) {
-
+    public void applyBiomeDecoration(WorldGenRegion p_62168_, StructureFeatureManager p_62169_) {
     }
 
     @Override
-    public void buildSurface(WorldGenRegion region, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-
+    public void buildSurfaceAndBedrock(WorldGenRegion p_62170_, ChunkAccess chunkAccess) {
     }
 
     @Override
     public void spawnOriginalMobs(WorldGenRegion region) {
+    }
 
+    @Override
+    public StructureSettings getSettings() {
+        return parent.getSettings();
+    }
+
+    @Override
+    public int getSpawnHeight(LevelHeightAccessor p_156157_) {
+        return parent.getSpawnHeight(p_156157_);
+    }
+
+    @Override
+    public BiomeSource getBiomeSource() {
+        return parent.getBiomeSource();
     }
 
     @Override
@@ -91,9 +113,21 @@ public class SkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
+    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome p_156158_, StructureFeatureManager p_156159_, MobCategory p_156160_, BlockPos p_156161_) {
+        return parent.getMobsAt(p_156158_, p_156159_, p_156160_, p_156161_);
+    }
+
+    @Override
+    public void createStructures(RegistryAccess p_62200_, StructureFeatureManager p_62201_, ChunkAccess p_62202_, StructureManager p_62203_, long p_62204_) {
+    }
+
+    @Override
+    public void createReferences(WorldGenLevel p_62178_, StructureFeatureManager p_62179_, ChunkAccess p_62180_) {
+    }
+
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
         if (generateSealedWorld) {
-            return parent.fillFromNoise(executor, blender, structureFeatureManager, chunk).whenCompleteAsync((chunkAccess, throwable) -> {
+            return parent.fillFromNoise(executor, structureFeatureManager, chunk).whenCompleteAsync((chunkAccess, throwable) -> {
                 BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(0,0,0);
                 for (blockPos.setZ(0); blockPos.getZ() < 16; blockPos.setZ(blockPos.getZ() + 1)) {
                     for (blockPos.setX(0); blockPos.getX() < 16; blockPos.setX(blockPos.getX() + 1)) {
@@ -135,56 +169,6 @@ public class SkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> createBiomes(Registry<Biome> biomes, Executor executor, Blender blender, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-        return parent.createBiomes(biomes, executor, blender, structureFeatureManager, chunk);
-    }
-
-    @Override
-    public Biome getNoiseBiome(int x, int y, int z) {
-        return parent.getNoiseBiome(x, y, z);
-    }
-
-    @Override
-    public BlockPos findNearestMapFeature(ServerLevel level, StructureFeature<?> feature, BlockPos pos, int p_62165_, boolean p_62166_) {
-        return parent.findNearestMapFeature(level, feature, pos, p_62165_, p_62166_);
-    }
-
-    @Override
-    public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureFeatureManager structureFeatureManager) {
-
-    }
-
-    @Override
-    public StructureSettings getSettings() {
-        return parent.getSettings();
-    }
-
-    @Override
-    public int getSpawnHeight(LevelHeightAccessor heightAccessor) {
-        return parent.getSpawnHeight(heightAccessor);
-    }
-
-    @Override
-    public BiomeSource getBiomeSource() {
-        return parent.getBiomeSource();
-    }
-
-    @Override
-    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome biome, StructureFeatureManager structureFeatureManager, MobCategory mobCategory, BlockPos pos) {
-        return parent.getMobsAt(biome, structureFeatureManager, mobCategory, pos);
-    }
-
-    @Override
-    public void createStructures(RegistryAccess registryAccess, StructureFeatureManager structureFeatureManager, ChunkAccess chunk, StructureManager structureManager, long seed) {
-
-    }
-
-    @Override
-    public void createReferences(WorldGenLevel level, StructureFeatureManager structureFeatureManager, ChunkAccess chunk) {
-
-    }
-
-    @Override
     public int getFirstFreeHeight(int x, int z, Heightmap.Types heightMapType, LevelHeightAccessor heightAccessor) {
         return parent.getFirstFreeHeight(x, z, heightMapType, heightAccessor);
     }
@@ -198,4 +182,10 @@ public class SkyChunkGenerator extends ChunkGenerator {
     public boolean hasStronghold(ChunkPos chunkPos) {
         return parent.hasStronghold(chunkPos);
     }
+
+    @Override
+    public BaseStoneSource getBaseStoneSource() {
+        return parent.getBaseStoneSource();
+    }
+
 }

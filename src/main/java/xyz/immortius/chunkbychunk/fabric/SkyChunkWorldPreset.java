@@ -6,9 +6,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
 import xyz.immortius.chunkbychunk.common.world.SkyChunkGenerator;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
@@ -27,15 +29,17 @@ public class SkyChunkWorldPreset extends WorldPreset {
     }
 
     @Override
-    public ChunkGenerator generator(RegistryAccess registryAccess, long seed) {
-        return new SkyChunkGenerator(WorldGenSettings.makeDefaultOverworld(registryAccess, seed), generateSealedWorld);
+    public ChunkGenerator generator(Registry<Biome> biomeRegistry, Registry<NoiseGeneratorSettings> dimensionSettingsRegistry, long seed) {
+        return new SkyChunkGenerator(WorldGenSettings.makeDefaultOverworld(biomeRegistry, dimensionSettingsRegistry, seed), generateSealedWorld);
     }
 
     @Override
     public WorldGenSettings create(RegistryAccess.RegistryHolder registryHolder, long seed, boolean generateStructures, boolean bonusChest) {
+        Registry<Biome> biomeRegistry = registryHolder.registryOrThrow(Registry.BIOME_REGISTRY);
         Registry<DimensionType> dimensionTypeRegistry = registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY);
+        Registry<NoiseGeneratorSettings> dimensionSettingsRegistry = registryHolder.registryOrThrow(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY);
 
-        WorldGenSettings worldGenSettings = new WorldGenSettings(seed, generateStructures, bonusChest, WorldGenSettings.withOverworld(registryHolder.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY), DimensionType.defaultDimensions(registryHolder, seed), this.generator(registryHolder, seed)));
+        WorldGenSettings worldGenSettings = new WorldGenSettings(seed, generateStructures, bonusChest, WorldGenSettings.withOverworld(dimensionTypeRegistry, DimensionType.defaultDimensions(dimensionTypeRegistry, biomeRegistry, dimensionSettingsRegistry, seed), this.generator(biomeRegistry, dimensionSettingsRegistry, seed)));
         if (worldGenSettings.dimensions().get(LevelStem.OVERWORLD).generator() instanceof SkyChunkGenerator primeGenerator) {
             worldGenSettings.dimensions().register(SKY_CHUNK_GENERATION_LEVEL_STEM, new LevelStem(() -> dimensionTypeRegistry.get(DimensionType.OVERWORLD_LOCATION), primeGenerator.getParent()), Lifecycle.stable());
         }

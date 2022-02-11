@@ -19,8 +19,7 @@ public class UnstableSpawnChunkBlock extends BaseSpawnChunkBlock {
     @Override
     protected ChunkPos getSourceChunk(Level targetLevel, BlockPos targetBlockPos) {
         Random random = new Random(targetBlockPos.asLong());
-        return new ChunkPos(random.nextInt(Short.MIN_VALUE, Short.MAX_VALUE), random.nextInt(Short.MIN_VALUE, Short.MAX_VALUE));
+        return new ChunkPos(random.nextInt(Short.MAX_VALUE * 2) + Short.MIN_VALUE, random.nextInt(Short.MAX_VALUE * 2) + Short.MIN_VALUE);
     }
-
 
 }

@@ -126,9 +126,10 @@ public class WorldForgeBlockEntity extends BaseFueledBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("Progress", this.progress);
+    public CompoundTag save(CompoundTag tag) {
+        CompoundTag result = super.save(tag);
+        result.putInt("Progress", this.progress);
+        return result;
     }
 
     public static void serverTick(Level level, BlockPos blockPos, BlockState blockState, WorldForgeBlockEntity entity) {
