@@ -1,36 +1,42 @@
 package xyz.immortius.chunkbychunk.interop;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraftforge.common.util.ITeleporter;
+import net.minecraft.world.level.storage.LevelResource;
+import xyz.immortius.chunkbychunk.config.ChunkByChunkConfig;
+import xyz.immortius.chunkbychunk.config.system.ConfigSystem;
+import xyz.immortius.chunkbychunk.fabric.ChangeDimensionImpl;
+import xyz.immortius.chunkbychunk.fabric.mixins.BucketFluidAccessor;
 
-import javax.annotation.Nullable;
-import java.util.function.Function;
+
 
 /**
  * Static methods whose implementation varies by mod system
  */
 public final class CBCInteropMethods {
+    public static final String SERVERCONFIG = "serverconfig";
+    private static final ConfigSystem configSystem = new ConfigSystem();
+
     private CBCInteropMethods() {
+
     }
 
     /**
      * Change the dimension of an entity.
-     * For forge, this uses the forge extension changeDimension method
+     * For fabric, we use a mixin to enable dimension changes
      *
      * @param entity     The entity to move
      * @param level      The level to move the entity to
      * @param portalInfo Portal information for the move
      * @return The moved entity
      */
-    @Nullable
     public static Entity changeDimension(Entity entity, ServerLevel level, PortalInfo portalInfo) {
-        return entity.changeDimension(level, new EntityTeleport(portalInfo));
+        return ChangeDimensionImpl.changeDimension(entity, level, portalInfo);
     }
 
     /**
@@ -38,42 +44,15 @@ public final class CBCInteropMethods {
      * @return The fluid contents of the bucket (may be null)
      */
     public static Fluid getBucketContents(BucketItem bucket) {
-        return bucket.getFluid();
+        return ((BucketFluidAccessor) bucket).getFluid();
     }
 
     /**
      * Loads configuration for a server.
-     * This is handled automatically by forge.
      *
      * @param server The server to load config for
      */
     public static void loadServerConfig(MinecraftServer server) {
-        // Handled by forge
+        configSystem.synchConfig(server.getWorldPath(LevelResource.ROOT).resolve(SERVERCONFIG).resolve(ChunkByChunkConstants.MOD_ID + ".toml"), ChunkByChunkConfig.get());
     }
-
-    private static class EntityTeleport implements ITeleporter {
-
-        private final PortalInfo portalInfo;
-
-        public EntityTeleport(PortalInfo portalInfo) {
-            this.portalInfo = portalInfo;
-        }
-
-        @Override
-        public PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo) {
-            return portalInfo;
-        }
-
-        @Override
-        public boolean isVanilla() {
-            return false;
-        }
-
-        @Override
-        public boolean playTeleportSound(ServerPlayer player, ServerLevel sourceWorld, ServerLevel destWorld) {
-            return false;
-        }
-    }
-
-
 }

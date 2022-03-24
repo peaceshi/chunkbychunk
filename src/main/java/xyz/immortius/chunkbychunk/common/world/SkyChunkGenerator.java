@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
 import org.jetbrains.annotations.Nullable;
+import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,7 +53,7 @@ public class SkyChunkGenerator extends ChunkGenerator {
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld) {
-        super(parent.structureSets, parent.structureOverrides, parent.getBiomeSource());
+        super(((ChunkGeneratorStructureAccessor) parent).getStructureSet(), ((ChunkGeneratorStructureAccessor) parent).getStructureOverrides(), parent.getBiomeSource());
         this.parent = parent;
         this.generateSealedWorld = generateSealedWorld;
     }
