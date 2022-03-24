@@ -19,11 +19,13 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,7 +53,7 @@ import java.nio.file.Paths;
  */
 @Mod("chunkbychunk")
 public class ChunkByChunkMod {
-    private static final DeferredRegister<ForgeWorldPreset> WORLD_PRESETS = DeferredRegister.create(ForgeRegistries.WORLD_TYPES, ChunkByChunkConstants.MOD_ID);
+    private static final DeferredRegister<ForgeWorldPreset> WORLD_PRESETS = DeferredRegister.create(ForgeRegistries.Keys.WORLD_TYPES, ChunkByChunkConstants.MOD_ID);
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ChunkByChunkConstants.MOD_ID);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ChunkByChunkConstants.MOD_ID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ChunkByChunkConstants.MOD_ID);
@@ -89,10 +91,6 @@ public class ChunkByChunkMod {
 
     public static final RegistryObject<SoundEvent> SPAWN_CHUNK_SOUND_EVENT = SOUNDS.register("spawnchunkevent", () -> new SoundEvent(new ResourceLocation(ChunkByChunkConstants.MOD_ID, "chunk_spawn_sound")));
 
-    static {
-        Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(ChunkByChunkConstants.MOD_ID, "skychunkgenerator"), SkyChunkGenerator.CODEC);
-    }
-
     public ChunkByChunkMod() {
         new ConfigSystem().synchConfig(Paths.get("defaultconfigs", "chunkbychunk.toml"), new xyz.immortius.chunkbychunk.config.ChunkByChunkConfig());
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ChunkByChunkConfig.GENERAL_SPEC, "chunkByChunk.toml");
@@ -105,6 +103,7 @@ public class ChunkByChunkMod {
         SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -115,6 +114,10 @@ public class ChunkByChunkMod {
             MenuScreens.register(WORLD_FORGE_MENU.get(), WorldForgeScreen::new);
             MenuScreens.register(WORLD_SCANNER_MENU.get(), WorldScannerScreen::new);
         });
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+        Registry.register(Registry.CHUNK_GENERATOR, new ResourceLocation(ChunkByChunkConstants.MOD_ID, "skychunkgenerator"), SkyChunkGenerator.CODEC);
     }
 
     @SubscribeEvent

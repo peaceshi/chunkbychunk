@@ -1,16 +1,19 @@
 package xyz.immortius.chunkbychunk.common.world;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.*;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.random.WeightedRandomList;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -18,13 +21,16 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.StructureSettings;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Stream;
 
 /**
  * The prime Sky Chunk Generator - this generates the overworld dimension, which is either empty or is
@@ -46,7 +52,7 @@ public class SkyChunkGenerator extends ChunkGenerator {
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld) {
-        super(parent.getBiomeSource(), parent.getSettings());
+        super(parent.structureSets, parent.structureOverrides, parent.getBiomeSource());
         this.parent = parent;
         this.generateSealedWorld = generateSealedWorld;
     }
@@ -140,23 +146,19 @@ public class SkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public Biome getNoiseBiome(int x, int y, int z) {
-        return parent.getNoiseBiome(x, y, z);
+    public Holder<Biome> getNoiseBiome(int p_204416_, int p_204417_, int p_204418_) {
+        return parent.getNoiseBiome(p_204416_, p_204417_, p_204418_);
     }
 
+    @Nullable
     @Override
-    public BlockPos findNearestMapFeature(ServerLevel level, StructureFeature<?> feature, BlockPos pos, int p_62165_, boolean p_62166_) {
-        return parent.findNearestMapFeature(level, feature, pos, p_62165_, p_62166_);
+    public Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestMapFeature(ServerLevel p_207971_, HolderSet<ConfiguredStructureFeature<?, ?>> p_207972_, BlockPos p_207973_, int p_207974_, boolean p_207975_) {
+        return parent.findNearestMapFeature(p_207971_, p_207972_, p_207973_, p_207974_, p_207975_);
     }
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureFeatureManager structureFeatureManager) {
 
-    }
-
-    @Override
-    public StructureSettings getSettings() {
-        return parent.getSettings();
     }
 
     @Override
@@ -170,8 +172,8 @@ public class SkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Biome biome, StructureFeatureManager structureFeatureManager, MobCategory mobCategory, BlockPos pos) {
-        return parent.getMobsAt(biome, structureFeatureManager, mobCategory, pos);
+    public WeightedRandomList<MobSpawnSettings.SpawnerData> getMobsAt(Holder<Biome> p_204386_, StructureFeatureManager p_204387_, MobCategory p_204388_, BlockPos p_204389_) {
+        return parent.getMobsAt(p_204386_, p_204387_, p_204388_, p_204389_);
     }
 
     @Override
@@ -195,7 +197,22 @@ public class SkyChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public boolean hasStronghold(ChunkPos chunkPos) {
-        return parent.hasStronghold(chunkPos);
+    public void addDebugScreenInfo(List<String> p_208054_, BlockPos p_208055_) {
+
+    }
+
+    @Override
+    public boolean hasFeatureChunkInRange(ResourceKey<StructureSet> p_212266_, long p_212267_, int p_212268_, int p_212269_, int p_212270_) {
+        return parent.hasFeatureChunkInRange(p_212266_, p_212267_, p_212268_, p_212269_, p_212270_);
+    }
+
+    @Override
+    public Stream<Holder<StructureSet>> possibleStructureSets() {
+        return parent.possibleStructureSets();
+    }
+
+    @Override
+    public void ensureStructuresGenerated() {
+        parent.ensureStructuresGenerated();
     }
 }

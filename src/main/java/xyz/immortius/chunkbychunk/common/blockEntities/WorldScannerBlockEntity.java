@@ -32,10 +32,7 @@ import xyz.immortius.chunkbychunk.interop.CBCInteropMethods;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkSettings;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * World Scanner Block Entity - this consumes crystals in order to scan for a provided block or item hint.
@@ -131,7 +128,7 @@ public class WorldScannerBlockEntity extends BaseFueledBlockEntity {
     }
 
     public WorldScannerBlockEntity(BlockPos pos, BlockState state) {
-        super(ChunkByChunkConstants.worldScannerEntity(), pos, state, NUM_ITEM_SLOTS, SLOT_FUEL, FUEL);
+        super(ChunkByChunkConstants.worldScannerEntity(), pos, state, NUM_ITEM_SLOTS, SLOT_FUEL, FUEL, Collections.emptyMap());
     }
 
     @Override

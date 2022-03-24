@@ -1,9 +1,9 @@
 package xyz.immortius.chunkbychunk.forge;
 
 import com.mojang.serialization.Lifecycle;
-import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -36,12 +36,12 @@ public class SkyChunkGeneratorFactory implements ForgeWorldPreset.IBasicChunkGen
     @Override
     public WorldGenSettings createSettings(RegistryAccess dynamicRegistries, long seed, boolean generateStructures, boolean bonusChest, String generatorSettings) {
         Registry<DimensionType> dimensionTypeRegistry = dynamicRegistries.registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY);
-        MappedRegistry<LevelStem> levelStems = WorldGenSettings.withOverworld(dimensionTypeRegistry,
+        WritableRegistry<LevelStem> levelStems = (WritableRegistry<LevelStem>) WorldGenSettings.withOverworld(dimensionTypeRegistry,
                 DimensionType.defaultDimensions(dynamicRegistries, seed),
                 createChunkGenerator(dynamicRegistries, seed, generatorSettings));
 
         if (levelStems.get(LevelStem.OVERWORLD).generator() instanceof SkyChunkGenerator primeGenerator) {
-            levelStems.register(SKY_CHUNK_GENERATION_LEVEL_STEM, new LevelStem(() -> dimensionTypeRegistry.get(DimensionType.OVERWORLD_LOCATION), primeGenerator.getParent()), Lifecycle.stable());
+            levelStems.register(SKY_CHUNK_GENERATION_LEVEL_STEM, new LevelStem(dimensionTypeRegistry.getOrCreateHolder(DimensionType.OVERWORLD_LOCATION), primeGenerator.getParent()), Lifecycle.stable());
         }
         return new WorldGenSettings(seed, generateStructures, bonusChest, levelStems);
     }
