@@ -5,11 +5,13 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -79,16 +81,17 @@ public final class ServerEventHandler {
         WorldGenSettings worldGenSettings = server.getWorldData().worldGenSettings();
         LevelStem overworldStem = worldGenSettings.dimensions().get(Level.OVERWORLD.location());
         LevelStem generationStem = worldGenSettings.dimensions().get(ChunkByChunkConstants.SKY_CHUNK_GENERATION_LEVEL.location());
+        WritableRegistry<LevelStem> dimensions = (WritableRegistry<LevelStem>) worldGenSettings.dimensions();
         if (!(overworldStem.generator() instanceof SkyChunkGenerator)) {
             Registry<DimensionType> dimensionTypeRegistry = server.registryAccess().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY);
             if (generationStem == null) {
                 ResourceKey<LevelStem> skychunkgeneration = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, new ResourceLocation(ChunkByChunkConstants.MOD_ID, "skychunkgeneration"));
-                generationStem = new LevelStem(() -> dimensionTypeRegistry.get(DimensionType.OVERWORLD_LOCATION), overworldStem.generator());
-                worldGenSettings.dimensions().register(skychunkgeneration, generationStem, Lifecycle.stable());
+                generationStem = new LevelStem(dimensionTypeRegistry.getOrCreateHolder(DimensionType.OVERWORLD_LOCATION), overworldStem.generator());
+                dimensions.register(skychunkgeneration, generationStem, Lifecycle.stable());
             }
 
-            LevelStem newOverworldStem = new LevelStem(() -> dimensionTypeRegistry.get(DimensionType.OVERWORLD_LOCATION), new SkyChunkGenerator(overworldStem.generator(), ChunkByChunkConfig.get().getGeneration().sealWorld()));
-            worldGenSettings.dimensions().registerOrOverride(OptionalInt.empty(), ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, Level.OVERWORLD.location()), newOverworldStem, Lifecycle.stable());
+            LevelStem newOverworldStem = new LevelStem(dimensionTypeRegistry.getOrCreateHolder(DimensionType.OVERWORLD_LOCATION), new SkyChunkGenerator(overworldStem.generator(), ChunkByChunkConfig.get().getGeneration().sealWorld()));
+            dimensions.registerOrOverride(OptionalInt.empty(), ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, Level.OVERWORLD.location()), newOverworldStem, Lifecycle.stable());
         }
     }
 
@@ -124,8 +127,8 @@ public final class ServerEventHandler {
      * @param generationLevel
      */
     private static void findAppropriateSpawnChunk(ServerLevel overworldLevel, ServerLevel generationLevel) {
-        Set<Block> logs = ImmutableSet.copyOf(BlockTags.LOGS.getValues());
-        Set<Block> leaves = ImmutableSet.copyOf(BlockTags.LEAVES.getValues());
+        TagKey<Block> logsTag = BlockTags.LOGS;
+        TagKey<Block> leavesTag = BlockTags.LEAVES;
         Set<Block> redstone = ImmutableSet.of(Blocks.REDSTONE_ORE, Blocks.DEEPSLATE_REDSTONE_ORE);
         Set<Block> copper = ImmutableSet.of(Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE, Blocks.RAW_COPPER_BLOCK);
 
@@ -134,7 +137,7 @@ public final class ServerEventHandler {
         int attempts = 0;
         while (attempts < MAX_FIND_CHUNK_ATTEMPTS) {
             LevelChunk chunk = generationLevel.getChunk(iterator.getX(), iterator.getY());
-            if (ChunkUtil.countBlocks(chunk, logs) > 1 && ChunkUtil.countBlocks(chunk, leaves) > 1 && ChunkUtil.countBlocks(chunk, redstone) >= 36 && ChunkUtil.countBlocks(chunk, copper) >= 36) {
+            if (ChunkUtil.countBlocks(chunk, logsTag) > 1 && ChunkUtil.countBlocks(chunk, leavesTag) > 1 && ChunkUtil.countBlocks(chunk, redstone) >= 36 && ChunkUtil.countBlocks(chunk, copper) >= 36) {
                 ServerLevelData levelData = (ServerLevelData) overworldLevel.getLevelData();
                 levelData.setSpawn(new BlockPos(chunk.getPos().getMiddleBlockX(), ChunkUtil.getSafeSpawnHeight(chunk, chunk.getPos().getMiddleBlockX(), chunk.getPos().getMiddleBlockZ()), chunk.getPos().getMiddleBlockZ()), levelData.getSpawnAngle());
                 break;
