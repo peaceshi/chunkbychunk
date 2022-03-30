@@ -1,7 +1,5 @@
 package xyz.immortius.chunkbychunk.interop;
 
-import net.fabricmc.fabric.api.tag.TagFactory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -44,14 +42,6 @@ public final class CBCInteropMethods {
      */
     public static Fluid getBucketContents(BucketItem bucket) {
         return ((BucketFluidAccessor) bucket).getFluid();
-    }
-
-    /**
-     * @param id The id of the item tag
-     * @return A list of all tagged items
-     */
-    public static List<Item> getTaggedItems(String id) {
-        return TagFactory.ITEM.create(new ResourceLocation(id)).getValues();
     }
 
 }
