@@ -1,7 +1,5 @@
 package xyz.immortius.chunkbychunk.interop;
 
-import net.fabricmc.fabric.api.tag.TagFactory;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

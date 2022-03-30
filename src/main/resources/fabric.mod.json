@@ -31,10 +31,10 @@
   ],
   "accessWidener" : "chunkbychunk.accesswidener",
   "depends": {
-    "modmenu" : ">=3.0.0",
-    "fabricloader": ">=0.11.3",
+    "modmenu" : ">=3.1.0",
+    "fabricloader": ">=0.13.3",
     "fabric": "*",
-    "minecraft": "1.18.1",
+    "minecraft": ">=1.18.2",
     "java": ">=17"
   }
 }

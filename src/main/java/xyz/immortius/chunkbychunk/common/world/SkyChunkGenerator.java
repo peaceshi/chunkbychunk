@@ -25,7 +25,7 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
-import org.jetbrains.annotations.Nullable;
+import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,7 +52,7 @@ public class SkyChunkGenerator extends ChunkGenerator {
      * @param generateSealedWorld Whether to generate a basic bedrock heightmap or not
      */
     public SkyChunkGenerator(ChunkGenerator parent, boolean generateSealedWorld) {
-        super(parent.structureSets, parent.structureOverrides, parent.getBiomeSource());
+        super(((ChunkGeneratorStructureAccessor) parent).getStructureSet(), ((ChunkGeneratorStructureAccessor) parent).getStructureOverrides(), parent.getBiomeSource());
         this.parent = parent;
         this.generateSealedWorld = generateSealedWorld;
     }
@@ -150,7 +150,6 @@ public class SkyChunkGenerator extends ChunkGenerator {
         return parent.getNoiseBiome(p_204416_, p_204417_, p_204418_);
     }
 
-    @Nullable
     @Override
     public Pair<BlockPos, Holder<ConfiguredStructureFeature<?, ?>>> findNearestMapFeature(ServerLevel p_207971_, HolderSet<ConfiguredStructureFeature<?, ?>> p_207972_, BlockPos p_207973_, int p_207974_, boolean p_207975_) {
         return parent.findNearestMapFeature(p_207971_, p_207972_, p_207973_, p_207974_, p_207975_);
