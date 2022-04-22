@@ -1,18 +1,12 @@
 package xyz.immortius.chunkbychunk.interop;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.level.storage.LevelResource;
-import xyz.immortius.chunkbychunk.config.ChunkByChunkConfig;
-import xyz.immortius.chunkbychunk.config.system.ConfigSystem;
-import xyz.immortius.chunkbychunk.fabric.ChangeDimensionImpl;
-import xyz.immortius.chunkbychunk.fabric.mixins.BucketFluidAccessor;
-
-import java.util.List;
+import xyz.immortius.chunkbychunk.quilt.ChangeDimensionImpl;
+import xyz.immortius.chunkbychunk.quilt.mixins.BucketFluidAccessor;
 
 /**
  * Static methods whose implementation varies by mod system

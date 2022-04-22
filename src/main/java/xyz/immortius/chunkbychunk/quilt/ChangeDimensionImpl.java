@@ -1,4 +1,4 @@
-package xyz.immortius.chunkbychunk.fabric;
+package xyz.immortius.chunkbychunk.quilt;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
