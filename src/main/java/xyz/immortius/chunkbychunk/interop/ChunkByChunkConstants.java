@@ -15,7 +15,7 @@ import xyz.immortius.chunkbychunk.common.blockEntities.*;
 import xyz.immortius.chunkbychunk.common.menus.BedrockChestMenu;
 import xyz.immortius.chunkbychunk.common.menus.WorldForgeMenu;
 import xyz.immortius.chunkbychunk.common.menus.WorldScannerMenu;
-import xyz.immortius.chunkbychunk.fabric.ChunkByChunkMod;
+import xyz.immortius.chunkbychunk.quilt.ChunkByChunkMod;
 
 /**
  * Constants for ChunkByChunk - may vary by mod system

@@ -5,8 +5,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
-import xyz.immortius.chunkbychunk.fabric.ChangeDimensionImpl;
-import xyz.immortius.chunkbychunk.fabric.mixins.BucketFluidAccessor;
+import xyz.immortius.chunkbychunk.quilt.ChangeDimensionImpl;
+import xyz.immortius.chunkbychunk.quilt.mixins.BucketFluidAccessor;
 
 /**
  * Static methods whose implementation varies by mod system

@@ -1,0 +1,37 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "xyz.immortius",
+		"id": "chunkbychunk",
+		"version": "${version}",
+		"metadata": {
+			"name": "Chunk By Chunk",
+			"description": "This mod starts the overworld with a single chunk, but provides the tools to expand to world one chunk at a time.",
+			"contributors": {
+				"Me!": "Immortius"
+			},
+			"icon": "assets/chunkbychunk/logo.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": "xyz.immortius.chunkbychunk.quilt.ChunkByChunkMod",
+			"client_init" : "xyz.immortius.chunkbychunk.quilt.ChunkByChunkClientMod",
+			"modmenu": "xyz.immortius.chunkbychunk.quilt.ModMenuApiImpl"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.16.0-"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": ">=1.0.0-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.18.2"
+			}
+		]
+	},
+	"mixin": "chunkbychunk.mixins.json"
+}

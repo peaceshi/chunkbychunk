@@ -1,12 +1,12 @@
-package xyz.immortius.chunkbychunk.fabric;
+package xyz.immortius.chunkbychunk.quilt;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.fabric.mixin.screen.ScreenAccessor;
-import net.minecraft.client.Minecraft;
-import xyz.immortius.chunkbychunk.client.screens.ChunkByChunkConfigScreen;
+//import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+//import com.terraformersmc.modmenu.api.ModMenuApi;
+//import net.fabricmc.fabric.mixin.screen.ScreenAccessor;
+//import net.minecraft.client.Minecraft;
+//import xyz.immortius.chunkbychunk.client.screens.ChunkByChunkConfigScreen;
 
-public class ModMenuApiImpl implements ModMenuApi {
+/*public class ModMenuApiImpl implements ModMenuApi {
 
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return lastScreen -> {
@@ -18,4 +18,4 @@ public class ModMenuApiImpl implements ModMenuApi {
             }
         };
     }
-}
+}*/

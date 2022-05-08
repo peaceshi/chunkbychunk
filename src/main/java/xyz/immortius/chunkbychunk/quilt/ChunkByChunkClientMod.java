@@ -1,10 +1,11 @@
-package xyz.immortius.chunkbychunk.fabric;
+package xyz.immortius.chunkbychunk.quilt;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.gui.screens.MenuScreens;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
+import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 import xyz.immortius.chunkbychunk.client.screens.BedrockChestScreen;
 import xyz.immortius.chunkbychunk.client.screens.WorldForgeScreen;
 import xyz.immortius.chunkbychunk.client.screens.WorldScannerScreen;
@@ -18,11 +19,11 @@ public class ChunkByChunkClientMod implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(ChunkByChunkConstants.MOD_ID);
 
     @Override
-    public void onInitializeClient() {
+    public void onInitializeClient(ModContainer mod) {
         LOGGER.info("Client Initializing");
-        ScreenRegistry.register(ChunkByChunkConstants.bedrockChestMenu(), BedrockChestScreen::new);
-        ScreenRegistry.register(ChunkByChunkConstants.worldForgeMenu(), WorldForgeScreen::new);
-        ScreenRegistry.register(ChunkByChunkConstants.worldScannerMenu(), WorldScannerScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.bedrockChestMenu(), BedrockChestScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.worldForgeMenu(), WorldForgeScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.worldScannerMenu(), WorldScannerScreen::new);
 
         ClientPlayNetworking.registerGlobalReceiver(ChunkByChunkMod.CONFIG_PACKET, (client, handler, buf, responseSender) -> {
             LOGGER.info("Receiving config from server");

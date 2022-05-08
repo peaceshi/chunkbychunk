@@ -17,7 +17,7 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
-import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
+import xyz.immortius.chunkbychunk.quilt.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
