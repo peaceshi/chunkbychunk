@@ -17,6 +17,7 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -37,7 +38,7 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
      * @param parent The chunkGenerator this generator is based on
      */
     public BaseSkyChunkGenerator(ChunkGenerator parent, ResourceKey<Level> generationLevel) {
-        super(parent.structureSets, parent.structureOverrides, parent.getBiomeSource());
+        super(((ChunkGeneratorStructureAccessor) parent).getStructureSet(), ((ChunkGeneratorStructureAccessor) parent).getStructureOverrides(), parent.getBiomeSource());
         this.parent = parent;
         this.generationLevel = generationLevel;
     }
