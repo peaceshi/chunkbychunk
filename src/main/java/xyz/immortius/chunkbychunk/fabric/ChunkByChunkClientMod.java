@@ -3,6 +3,7 @@ package xyz.immortius.chunkbychunk.fabric;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.gui.screens.MenuScreens;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.immortius.chunkbychunk.client.screens.BedrockChestScreen;
@@ -20,9 +21,9 @@ public class ChunkByChunkClientMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         LOGGER.info("Client Initializing");
-        ScreenRegistry.register(ChunkByChunkConstants.bedrockChestMenu(), BedrockChestScreen::new);
-        ScreenRegistry.register(ChunkByChunkConstants.worldForgeMenu(), WorldForgeScreen::new);
-        ScreenRegistry.register(ChunkByChunkConstants.worldScannerMenu(), WorldScannerScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.bedrockChestMenu(), BedrockChestScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.worldForgeMenu(), WorldForgeScreen::new);
+        MenuScreens.register(ChunkByChunkConstants.worldScannerMenu(), WorldScannerScreen::new);
 
         ClientPlayNetworking.registerGlobalReceiver(ChunkByChunkMod.CONFIG_PACKET, (client, handler, buf, responseSender) -> {
             LOGGER.info("Receiving config from server");
