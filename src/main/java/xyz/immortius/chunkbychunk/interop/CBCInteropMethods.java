@@ -9,9 +9,9 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
-import xyz.immortius.chunkbychunk.fabric.ChangeDimensionImpl;
-import xyz.immortius.chunkbychunk.fabric.mixins.BucketFluidAccessor;
-import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
+import xyz.immortius.chunkbychunk.quilt.ChangeDimensionImpl;
+import xyz.immortius.chunkbychunk.quilt.mixins.BucketFluidAccessor;
+import xyz.immortius.chunkbychunk.quilt.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.Optional;
 

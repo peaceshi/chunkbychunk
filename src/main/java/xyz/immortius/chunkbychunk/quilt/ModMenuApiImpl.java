@@ -1,4 +1,4 @@
-package xyz.immortius.chunkbychunk.fabric;
+package xyz.immortius.chunkbychunk.quilt;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
