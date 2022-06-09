@@ -32,6 +32,7 @@ import xyz.immortius.chunkbychunk.common.world.SkyChunkGenerator;
 import xyz.immortius.chunkbychunk.common.world.SpawnChunkHelper;
 import xyz.immortius.chunkbychunk.config.ChunkByChunkConfig;
 import xyz.immortius.chunkbychunk.config.system.ConfigSystem;
+import xyz.immortius.chunkbychunk.fabric.mixins.DefrostedRegistry;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
 
 import java.util.List;
@@ -82,7 +83,7 @@ public final class ServerEventHandler {
         LevelStem overworldStem = worldGenSettings.dimensions().get(Level.OVERWORLD.location());
         LevelStem generationStem = worldGenSettings.dimensions().get(ChunkByChunkConstants.SKY_CHUNK_GENERATION_LEVEL.location());
         MappedRegistry<LevelStem> dimensions = (MappedRegistry<LevelStem>) worldGenSettings.dimensions();
-        dimensions.frozen = false;
+        ((DefrostedRegistry) dimensions).setFrozen(false);
         if (!(overworldStem.generator() instanceof SkyChunkGenerator)) {
             Registry<DimensionType> dimensionTypeRegistry = server.registryAccess().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY);
 
@@ -111,7 +112,7 @@ public final class ServerEventHandler {
                 dimensions.registerOrOverride(OptionalInt.empty(), ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, Level.NETHER.location()), newNetherStem, Lifecycle.stable());
             }
         }
-        dimensions.frozen = true;
+        ((DefrostedRegistry) dimensions).setFrozen(true);
     }
 
     /**
