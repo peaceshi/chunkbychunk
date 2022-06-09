@@ -3,26 +3,17 @@ package xyz.immortius.chunkbychunk.interop;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.fabricmc.fabric.api.tag.TagFactory;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.portal.PortalInfo;
-import net.minecraft.world.level.storage.LevelResource;
-import xyz.immortius.chunkbychunk.config.ChunkByChunkConfig;
-import xyz.immortius.chunkbychunk.config.system.ConfigSystem;
 import xyz.immortius.chunkbychunk.fabric.ChangeDimensionImpl;
 import xyz.immortius.chunkbychunk.fabric.mixins.BucketFluidAccessor;
+import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.List;
 
 /**
  * Static methods whose implementation varies by mod system
@@ -59,7 +50,7 @@ public final class CBCInteropMethods {
      * @return The structure sets for a given generator
      */
     public static Registry<StructureSet> getStructureSets(ChunkGenerator generator) {
-        return generator.structureSets;
+        return ((ChunkGeneratorStructureAccessor) generator).getStructureSet();
     }
 
     /**
@@ -67,6 +58,6 @@ public final class CBCInteropMethods {
      * @return The structure overrides for a given generator
      */
     public static Optional<HolderSet<StructureSet>> getStructureOverrides(ChunkGenerator generator) {
-        return generator.structureOverrides;
+        return ((ChunkGeneratorStructureAccessor) generator).getStructureOverrides();
     }
 }

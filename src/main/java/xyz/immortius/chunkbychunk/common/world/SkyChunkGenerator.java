@@ -12,6 +12,10 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import xyz.immortius.chunkbychunk.interop.ChunkByChunkConstants;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import xyz.immortius.chunkbychunk.fabric.mixins.ChunkGeneratorStructureAccessor;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
