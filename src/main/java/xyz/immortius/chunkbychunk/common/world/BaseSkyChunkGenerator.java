@@ -1,7 +1,6 @@
 package xyz.immortius.chunkbychunk.common.world;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import net.minecraft.core.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -12,9 +11,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
@@ -23,7 +20,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import xyz.immortius.chunkbychunk.interop.CBCInteropMethods;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.stream.Stream;
@@ -33,7 +29,7 @@ import java.util.stream.Stream;
  * parent generator is retained for biome information and similar. Each sky chunk generator also has a reference
  * to the dimension that generates chunks for this dimension
  */
-public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
+public abstract class BaseSkyChunkGenerator extends NoiseBasedChunkGenerator {
 
     protected final ChunkGenerator parent;
     protected final ResourceKey<Level> generationLevel;
@@ -42,7 +38,7 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
      * @param parent The chunkGenerator this generator is based on
      */
     public BaseSkyChunkGenerator(ChunkGenerator parent, ResourceKey<Level> generationLevel) {
-        super(CBCInteropMethods.getStructureSets(parent), CBCInteropMethods.getStructureOverrides(parent), parent.getBiomeSource());
+        super(CBCInteropMethods.getStructureSets(parent), CBCInteropMethods.getNoiseParamsRegistry(parent), parent.getBiomeSource(), CBCInteropMethods.getNoiseGeneratorSettings(parent));
         this.parent = parent;
         this.generationLevel = generationLevel;
     }
@@ -67,7 +63,6 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
 
     @Override
     public void applyCarvers(WorldGenRegion region, long p_223044_, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunk, GenerationStep.Carving carving) {
-
     }
 
     @Override
@@ -87,7 +82,6 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
 
     @Override
     public void buildSurface(WorldGenRegion worldGenRegion, StructureManager structureManager, RandomState randomState, ChunkAccess chunk) {
-
     }
 
     @Override
@@ -116,12 +110,11 @@ public abstract class BaseSkyChunkGenerator extends ChunkGenerator {
 
     @Override
     public void createStructures(RegistryAccess registry, RandomState randomState, StructureManager structureManager, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, long seed) {
-
     }
 
     @Override
     public void createReferences(WorldGenLevel level, StructureManager structureManager, ChunkAccess chunk) {
-
+        parent.createReferences(level, structureManager, chunk);
     }
 
     @Override
